@@ -11,6 +11,10 @@ class Paciente{
     private $idMedico;
 
     private $string;
+
+    
+
+
     public function getString(){
         return "benfica";
     }
@@ -91,20 +95,28 @@ class Paciente{
     }
 
     public function inserirPaciente(){
-            $sql = new Sql();
-            $sql->select("INSERT INTO paciente (nome, mesNascimento, anoNascimento, diaNascimento, sexo, endereco,idMedico) 
             
-            VALUES (:NM, :MN, :AN, :DN, :SX, :ED, :IDM) ", array(
-                
-                ':NM'=>$this->getNome(),
-                ':MN'=>$this->getMesNascimento(),
-                ':AN'=>$this->getAnoNascimento(),
-                ':DN'=>$this->getDiaNascimento(),
-                ':SX'=>$this->getSexo(),
-                ':ED'=>$this->getEndereco(),
-                ':IDM'=>$this->getIdMedico()
-            ));
+            $conn = new PDO("mysql:host=localhost;dbname=gestao","root","");
+
+            $stmt = $conn->prepare("INSERT INTO paciente (nome, mesNascimento, anoNascimento, diaNascimento, sexo, endereco, idMedico) 
+            
+            VALUES(:NAMEVAR, :MONTHVAR, :YEARVAR, :DAYVAR, :SEXVAR, :LOCATIONVAR, :IDMVAR )");
+
+
+            $stmt->bindValue(":NAMEVAR",$this->getNome() );
+            $stmt->bindValue(":MONTHVAR",$this->getMesNascimento());
+            $stmt->bindValue(":YEARVAR",$this->getAnoNascimento());
+            $stmt->bindValue(":DAYVAR", $this->getDiaNascimento());
+            $stmt->bindValue(":SEXVAR", $this->getSexo());
+            $stmt->bindValue(":LOCATIONVAR", $this->getEndereco());
+            $stmt->bindValue(":IDMVAR", $this->getIdMedico());
+
+            $stmt->execute();
+
+           
+
     }
+
     public function __toString(){
         return json_encode(array(
 
